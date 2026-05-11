@@ -1,0 +1,67 @@
+{
+  "id": "app.veritize.incopy",
+  "name": "Veritize",
+  "version": "0.1.0",
+  "main": "index.html",
+  "manifestVersion": 6,
+  "host": [
+    {
+      "app": "incopy",
+      "minVersion": "19.0.0"
+    }
+  ],
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "veritize-panel",
+      "label": {
+        "default": "Veritize"
+      },
+      "minimumSize": {
+        "width": 320,
+        "height": 480
+      },
+      "preferredDockedSize": {
+        "width": 360,
+        "height": 600
+      }
+    }
+  ],
+  "icons": [
+    {
+      "width": 23,
+      "height": 23,
+      "path": "icons/veritize-23.png",
+      "scale": [1, 2],
+      "theme": ["darkest", "dark", "medium", "lightest", "light", "all"],
+      "species": ["pluginList", "generic"]
+    }
+  ],
+  "requiredPermissions": {
+    "network": {
+      "domains": [
+        "https://app.veritize.app",
+        "https://app.dev.veritize.app",
+        "https://app.staging.veritize.app",
+        "https://api.veritize.app",
+        "https://api.dev.veritize.app",
+        "https://api.staging.veritize.app",
+        "https://incopy.veritize.app"
+      ]
+    },
+    "localFileSystem": "plugin",
+    "webview": {
+      "allow": "yes",
+      "domains": [
+        "https://app.veritize.app",
+        "https://app.dev.veritize.app",
+        "https://app.staging.veritize.app",
+        "https://incopy.veritize.app"
+      ]
+    },
+    "launchProcess": {
+      "schemes": ["https"],
+      "extensions": []
+    }
+  }
+}

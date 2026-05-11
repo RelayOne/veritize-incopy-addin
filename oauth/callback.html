@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Veritize sign-in complete</title>
+  </head>
+  <body>
+    <p id="status">Completing sign-in&hellip;</p>
+    <script>
+      // VZ-199-5 — OAuth 2.1 callback for the InCopy UXP plugin.
+      //
+      // The plugin opens this page in an in-panel iframe (UXP supports
+      // iframes that load same-origin or whitelisted https origins;
+      // incopy.veritize.app is whitelisted in manifest.json's
+      // requiredPermissions.webview.domains).
+      //
+      // This page reads the OAuth code + state from the URL and posts
+      // them back to the parent window via window.parent.postMessage.
+      // The plugin's listener completes the PKCE token exchange against
+      // /oauth/token; this static page never sees the code_verifier.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var code = params.get("code");
+        var state = params.get("state");
+        var errorParam = params.get("error");
+        var statusEl = document.getElementById("status");
+
+        var payload;
+        if (errorParam) {
+          statusEl.textContent = "Sign-in failed: " + errorParam;
+          payload = { error: errorParam };
+        } else if (!code) {
+          statusEl.textContent = "Sign-in failed: missing code in callback URL.";
+          payload = { error: "missing_code" };
+        } else {
+          statusEl.textContent =
+            "Sign-in complete; you may close this window.";
+          payload = { code: code, state: state };
+        }
+
+        // postMessage targetOrigin "*" is safe here because the payload
+        // (code + state) is single-use and the parent validates state
+        // against the verifier it generated.  The PKCE code_verifier
+        // never leaves the parent, so even a hostile listener can't
+        // exchange the code.
+        try {
+          window.parent.postMessage(payload, "*");
+        } catch (e) {
+          /* parent gone (popup-closed); user will see the status text */
+        }
+      })();
+    </script>
+  </body>
+</html>
